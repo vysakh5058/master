@@ -1,0 +1,17 @@
+node{
+    
+    stage('SCM Checkout'){
+       git branch: 'main', url: 'https://github.com/vysakh5058/master.git'
+    }
+    stage('Build Docker Image'){
+     sh 'whoami'
+     sh 'docker build -t hu-container .'
+    }    
+    stage('Push Docker Image'){
+       withCredentials([string(credentialsId: 'dockerhub', variable: 'docker-hub-pwd')]) {
+         sh "docker login -u vysakh5058 -p ${docker-hub-pwd}"
+        }
+        
+        sh 'docker push hu-container'
+    }
+}
